@@ -55,7 +55,7 @@ pmsm2 = pmsm;
 %% Target & Inverter Parameters
 target = mcb_SetProcessorDetails('F28379D',PWM_frequency);
 %target.comport = '<Select a port...>';
-target.comport = 'COM8';
+target.comport = 'COM15';
 inverter.model         = 'BoostXL-DRV8323'; 	% 		// Manufacturer Model Number
 inverter.sn            = 'INV_XXXX';         	% 		// Manufacturer Serial Number
 inverter.V_dc          = 24;       				%V      // DC Link Voltage of the Inverter
