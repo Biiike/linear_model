@@ -4,6 +4,12 @@
 
 % Copyright 2020-2022 The MathWorks, Inc.
 %clear,clc
+
+% 若环境变量 NoDefaultCurrentDirectoryInExePath 被设置，cmd 不会在当前目录
+% 查找可执行文件，导致代码生成时裸名调用 FOCwithLOAD.bat 失败（"'FOCwithLOAD.bat'
+% 不是内部或外部命令"）。此处清除它以恢复正常构建。
+setenv('NoDefaultCurrentDirectoryInExePath','');
+
 %% Set PWM Switching frequency
 PWM_frequency 	= 20e3;             %Hz     // converter s/w freq
 T_pwm           = 1/PWM_frequency;  %s      // PWM switching time period
@@ -128,9 +134,7 @@ PI_params.delay_Speed1      = (PI_params.delay_IIR + 0.5*Ts)/Ts_speed;
 innerPI.Filter.w0 = 2*pi*2000;      %电流环低通滤波器频率：2kHZ
 
 % D axis PI design %Controller Structure:K(s) = Kp + Ki/s
-%innerPI.iD.f0 = 1.5e+03;         %D电流环带宽频率
-%innerPI.iD.f0 = 7.5e+03;
-innerPI.iD.f0 = 800;
+innerPI.iD.f0 = 1.5e+03;         %D电流环带宽频率
 innerPI.iD.w0 = 2*pi*innerPI.iD.f0; %D电流环带宽角频率
 
 innerPI.iD.Continuous.Kp = innerPI.iD.w0*pmsm.Ld;
@@ -145,9 +149,7 @@ innerPI.iD.Discrete.KiTctr = innerPI.iD.Discrete.Ki*Ts;
 % innerPI.iD.Discrete.KiTctr = 0.339;
 
 % Q axis PI design %Controller Structure:K(s) = Kp + Ki/s
-%innerPI.iQ.f0 = 1.5e+03;
-%innerPI.iQ.f0 = 7.5e+03;
-innerPI.iQ.f0 = 800;
+innerPI.iQ.f0 = 1.5e+03;
 innerPI.iQ.w0 = 2*pi*innerPI.iQ.f0;
 
 innerPI.iQ.Continuous.Kp = innerPI.iQ.w0*pmsm.Lq;
@@ -162,10 +164,10 @@ innerPI.iQ.Discrete.KiTctr = innerPI.iQ.Discrete.Ki*Ts;
 % innerPI.iQ.Discrete.KiTctr = 0.339;
 
 %% Speed Controller 速度环整定
-%outerPI.Spd.Continuous.Kp = 100.0;
-%outerPI.Spd.Continuous.Ki = 100.0;
-outerPI.Spd.Continuous.Kp = 25;
-outerPI.Spd.Continuous.Ki = 750;
+% 仿真与空间重复控制基准PI参数（匹配测速窗DelayLength=20即1ms延时，闭环带宽~20Hz）
+outerPI.Spd.Continuous.Kp = 35.0;
+outerPI.Spd.Continuous.Ki = 100.0;
+
 % %%原跑实验参考值（高频带宽易受10ms测速窗滞后影响）
 % outerPI.Spd.Continuous.Kp = 70.6234;
 % outerPI.Spd.Continuous.Ki = 60.0;
