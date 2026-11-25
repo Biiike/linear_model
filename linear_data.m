@@ -55,7 +55,7 @@ pmsm2 = pmsm;
 %% Target & Inverter Parameters
 target = mcb_SetProcessorDetails('F28379D',PWM_frequency);
 %target.comport = '<Select a port...>';
-target.comport = 'COM15';
+target.comport = 'COM8';
 inverter.model         = 'BoostXL-DRV8323'; 	% 		// Manufacturer Model Number
 inverter.sn            = 'INV_XXXX';         	% 		// Manufacturer Serial Number
 inverter.V_dc          = 24;       				%V      // DC Link Voltage of the Inverter
@@ -129,7 +129,8 @@ innerPI.Filter.w0 = 2*pi*2000;      %电流环低通滤波器频率：2kHZ
 
 % D axis PI design %Controller Structure:K(s) = Kp + Ki/s
 %innerPI.iD.f0 = 1.5e+03;         %D电流环带宽频率
-innerPI.iD.f0 = 7.5e+03;
+%innerPI.iD.f0 = 7.5e+03;
+innerPI.iD.f0 = 800;
 innerPI.iD.w0 = 2*pi*innerPI.iD.f0; %D电流环带宽角频率
 
 innerPI.iD.Continuous.Kp = innerPI.iD.w0*pmsm.Ld;
@@ -145,7 +146,8 @@ innerPI.iD.Discrete.KiTctr = innerPI.iD.Discrete.Ki*Ts;
 
 % Q axis PI design %Controller Structure:K(s) = Kp + Ki/s
 %innerPI.iQ.f0 = 1.5e+03;
-innerPI.iQ.f0 = 7.5e+03;
+%innerPI.iQ.f0 = 7.5e+03;
+innerPI.iQ.f0 = 800;
 innerPI.iQ.w0 = 2*pi*innerPI.iQ.f0;
 
 innerPI.iQ.Continuous.Kp = innerPI.iQ.w0*pmsm.Lq;
@@ -160,9 +162,10 @@ innerPI.iQ.Discrete.KiTctr = innerPI.iQ.Discrete.Ki*Ts;
 % innerPI.iQ.Discrete.KiTctr = 0.339;
 
 %% Speed Controller 速度环整定
-outerPI.Spd.Continuous.Kp = 100.0;
-outerPI.Spd.Continuous.Ki = 100.0;
-
+%outerPI.Spd.Continuous.Kp = 100.0;
+%outerPI.Spd.Continuous.Ki = 100.0;
+outerPI.Spd.Continuous.Kp = 25;
+outerPI.Spd.Continuous.Ki = 750;
 % %%原跑实验参考值（高频带宽易受10ms测速窗滞后影响）
 % outerPI.Spd.Continuous.Kp = 70.6234;
 % outerPI.Spd.Continuous.Ki = 60.0;
